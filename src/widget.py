@@ -1,34 +1,26 @@
+import re
+
 from src.masks import get_mask_account, get_mask_card_number
 
 
-def mask_account_card(account_info: str) -> str:
+def mask_account_card(text: str) -> str:
     """
-    Маскирует номер карты или счета в зависимости от входных данных.
-    Параметры:
-    account_info (str): строка, содержащая тип и номер карты или счета.
-    Возвращает:
-    str: строка с замаскированным номером.
+    Маскирует номер карты или счета в зависимости от типа входных данных.
     """
-    parts = account_info.rsplit(" ", 1)
-    if len(parts) != 2:
-        raise ValueError("Неверный формат данных. Ожидается строка с типом и номером.")
-
-    account_type, number_str = parts[0], parts[1]
-
-    try:
-        number = int(number_str)
-    except ValueError:
-        raise ValueError("Номер должен содержать только цифры.")
-
-    # Маскировка номера в зависимости от типа
-    if account_type.lower().startswith(("visa", "mastercard", "maestro")):
-        masked_number = get_mask_card_number(number)
-    elif account_type.lower().startswith("счет"):
-        masked_number = get_mask_account(number)
+    # Определяем, что это карта или счет
+    if "Счет" in text:
+        # Извлекаем номер счета и маскируем его
+        account_number = re.search(r"\d{8,}", text)
+        if account_number:
+            masked_number = get_mask_account(int(account_number.group(0)))
+            return text.replace(account_number.group(0), masked_number)
     else:
-        raise ValueError("Неверный тип счета или карты.")
-
-    return f"{account_type} {masked_number}"
+        # Извлекаем номер карты и маскируем его
+        card_number = re.search(r"\d{16}", text)
+        if card_number:
+            masked_number = get_mask_card_number(int(card_number.group(0)))
+            return text.replace(card_number.group(0), masked_number)
+    return text
 
 
 def get_date(date_str: str) -> str:

@@ -8,7 +8,7 @@
 
 Склонируйте репозиторий:
 
-   ```bash
+   ```
    git clone https://github.com/yourusername/your-repository-name.git
    cd your-repository-name
    ```
@@ -59,3 +59,13 @@
    filtered_data = filter_by_state(data)
    print(filtered_data)  # [{'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'}]
    ```
+
+## Тестирование
+
+Для запуска тестов используйте следующую команду:
+
+    ```
+    pytest .
+    ```
+
+### Отчёт тестирования находится в [htmlcov](htmlcov/index.html).

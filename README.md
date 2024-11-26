@@ -60,12 +60,81 @@
    print(filtered_data)  # [{'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'}]
    ```
 
+### Модуль ***generators*** содержит генераторы для обработки и работы с данными.
+
+***filter_by_currency(transactions: List[Dict], currency: str) -> Iterator[Dict]*** -
+фильтрует список транзакций по заданной валюте и возвращает итератор. Удобно использовать для обработки больших объемов данных.
+
+Пример:
+
+   ```
+    from src.generators import filter_by_currency
+
+    transactions = [
+        {
+            "id": 939719570,
+           "state": "EXECUTED",
+           "operationAmount": {
+               "currency": {"code": "USD"}
+           }
+        },
+       {
+          "id": 142264268,
+          "state": "EXECUTED",
+           "operationAmount": {
+               "currency": {"code": "RUB"}
+           }
+        }
+    ]
+
+    usd_transactions = filter_by_currency(transactions, "USD")
+    for transaction in usd_transactions:
+        print(transaction)  # Выводит только транзакции с валютой "USD"
+   ```
+
+***transaction_descriptions(transactions: List[Dict]) -> Iterator[str]*** -
+генерирует описание операций из списка транзакций.
+
+Пример:
+
+   ```
+    from src.generators import transaction_descriptions
+
+    transactions = [
+        {"description": "Перевод организации"},
+        {"description": "Перевод со счета на счет"}
+    ]
+
+    descriptions = transaction_descriptions(transactions)
+    for description in descriptions:
+        print(description)
+    # Вывод:
+    # Перевод организации
+    # Перевод со счета на счет
+   ```
+
+***card_number_generator(start: int, stop: int) -> Iterator[str]*** -
+генерирует номера банковских карт в формате XXXX XXXX XXXX XXXX в заданном диапазоне.
+
+Пример:
+
+   ```
+   from src.generators import card_number_generator
+
+    for card_number in card_number_generator(1, 3):
+        print(card_number)
+    # Вывод:
+    # 0000 0000 0000 0001
+    # 0000 0000 0000 0002
+    # 0000 0000 0000 0003
+   ```
+
 ## Тестирование
 
 Для запуска тестов используйте следующую команду:
 
-    ```
+   ```
     pytest .
-    ```
+   ```
 
 ### Отчёт тестирования находится в [htmlcov](htmlcov/index.html).
